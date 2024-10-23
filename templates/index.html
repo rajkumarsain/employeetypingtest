@@ -54,13 +54,13 @@
         <p>Test your typing speed and accuracy!</p>
     </div>
 
-    <!-- Typing Test Section -->
     <div class="container typing-test-section">
         <div class="row">
             <div class="col-lg-12 text-center">
                 <h2>Ready to start typing?</h2>
                 <p>Click the button below to begin your test.</p>
-                <a href="#" class="btn btn-primary btn-lg">Start Typing Test</a>
+                <!-- Redirect to login page when button is clicked -->
+                <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg">Start Typing Test</a>
             </div>
         </div>
     </div>

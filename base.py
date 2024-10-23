@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 # Secret key for session management
 app.secret_key = 'your_secret_key'
-
+#not working
 # MySQL configurations
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'rajkumarsain'
@@ -47,11 +47,15 @@ def login():
             session['id'] = account['id']
             session['username'] = account['username']
             session['user_type'] = account['user_type']
-            # Check if the user is admin
+           # Redirect based on user_type
             if account['user_type'] == 'admin':
                 return redirect(url_for('admin_dashboard'))
+            elif account['user_type'] == 'examiner':
+                return redirect(url_for('examiner_dashboard'))
+            elif account['user_type'] == 'participant':
+                return redirect(url_for('participant_dashboard'))
             else:
-                msg = 'You do not have admin access!'
+                msg = 'Invalid user type!'
         else:
             # Account does not exist or username/password incorrect
             msg = 'Incorrect username/password!'
@@ -65,6 +69,32 @@ def admin_dashboard():
         return render_template('admin_dashboard.html')
     else:
         return redirect(url_for('login'))
+
+# Route for the examiner dashboard
+@app.route('/examiner_dashboard')
+def examiner_dashboard():
+    # Check if the user is logged in and is admin
+    if 'loggedin' in session and session['user_type'] == 'examiner':
+        return render_template('examiner_dashboard.html')
+    else:
+        return redirect(url_for('login'))
+    
+# Route for the participant dashboard
+@app.route('/participant_dashboard')
+def participant_dashboard():
+    # Check if the user is logged in and is admin
+    if 'loggedin' in session and session['user_type'] == 'participant':
+        return render_template('participant_dashboard.html')
+    else:
+        return redirect(url_for('login'))
+
+#Route to handle the form submission after typing by participant
+@app.route('/save_text', methods=['POST'])
+def save_text():
+    typed_text = request.form['typed_text']
+    # You can save the text to a file or database here
+    return redirect(url_for('participant_dashboard'))
+
 
 # Route for logging out
 @app.route('/logout')
